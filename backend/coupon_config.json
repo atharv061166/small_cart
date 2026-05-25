@@ -1,0 +1,5 @@
+{
+  "min_order_count": 0,
+  "min_days_since_last_order": 2,
+  "max_days_since_last_order": 15
+}

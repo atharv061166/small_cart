@@ -1,0 +1,148 @@
+department,order_dow,order_count
+alcohol,0,18150
+alcohol,1,21215
+alcohol,2,21002
+alcohol,3,23293
+alcohol,4,27100
+alcohol,5,28465
+alcohol,6,20069
+babies,0,85108
+babies,1,75243
+babies,2,58526
+babies,3,54229
+babies,4,53263
+babies,5,53529
+babies,6,58845
+bakery,0,236619
+bakery,1,211500
+bakery,2,158372
+bakery,3,144756
+bakery,4,143201
+bakery,5,160173
+bakery,6,170560
+beverages,0,455671
+beverages,1,499815
+beverages,2,385525
+beverages,3,358740
+beverages,4,354296
+beverages,5,392118
+beverages,6,358010
+breakfast,0,133781
+breakfast,1,134010
+breakfast,2,99432
+breakfast,3,90534
+breakfast,4,88797
+breakfast,5,98176
+breakfast,6,94339
+bulk,0,6444
+bulk,1,6526
+bulk,2,4728
+bulk,3,4408
+bulk,4,4150
+bulk,5,4761
+bulk,6,4915
+canned goods,0,239817
+canned goods,1,187010
+canned goods,2,138017
+canned goods,3,124363
+canned goods,4,120165
+canned goods,5,134754
+canned goods,6,170731
+dairy eggs,0,1070923
+dairy eggs,1,989872
+dairy eggs,2,733935
+dairy eggs,3,665526
+dairy eggs,4,660577
+dairy eggs,5,740339
+dairy eggs,6,769895
+deli,0,220115
+deli,1,191595
+deli,2,140718
+deli,3,126970
+deli,4,124428
+deli,5,140059
+deli,6,151655
+dry goods pasta,0,191654
+dry goods pasta,1,153674
+dry goods pasta,2,115554
+dry goods pasta,3,102895
+dry goods pasta,4,100015
+dry goods pasta,5,108313
+dry goods pasta,6,133235
+frozen,0,462177
+frozen,1,374893
+frozen,2,293978
+frozen,3,277634
+frozen,4,271295
+frozen,5,303762
+frozen,6,353119
+household,0,133690
+household,1,126346
+household,2,104634
+household,3,99909
+household,4,97848
+household,5,104254
+household,6,107971
+international,0,58723
+international,1,48153
+international,2,35759
+international,3,32882
+international,4,30848
+international,5,34235
+international,6,40555
+meat seafood,0,159221
+meat seafood,1,123398
+meat seafood,2,90113
+meat seafood,3,81066
+meat seafood,4,80098
+meat seafood,5,91659
+meat seafood,6,113683
+missing,0,15262
+missing,1,12442
+missing,2,9459
+missing,3,9233
+missing,4,9044
+missing,5,10512
+missing,6,11444
+other,0,6459
+other,1,6234
+other,2,5171
+other,3,4840
+other,4,4764
+other,5,5293
+other,6,5325
+pantry,0,370336
+pantry,1,316582
+pantry,2,250162
+pantry,3,236784
+pantry,4,234551
+pantry,5,259372
+pantry,6,289032
+personal care,0,85072
+personal care,1,75268
+personal care,2,62543
+personal care,3,59855
+personal care,4,57583
+personal care,5,60673
+personal care,6,67699
+pets,0,18039
+pets,1,15163
+pets,2,12383
+pets,3,13113
+pets,4,12922
+pets,5,14372
+pets,6,16229
+produce,0,2057869
+produce,1,1746944
+produce,2,1244389
+produce,3,1111911
+produce,4,1095847
+produce,5,1231232
+produce,6,1400186
+snacks,0,508562
+snacks,1,555951
+snacks,2,413960
+snacks,3,375557
+snacks,4,371904
+snacks,5,410392
+snacks,6,370086

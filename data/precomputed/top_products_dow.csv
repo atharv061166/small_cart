@@ -1,0 +1,71 @@
+order_dow,product_name,order_count
+0,Banana,101474
+0,Bag of Organic Bananas,75052
+0,Organic Baby Spinach,57556
+0,Organic Strawberries,56635
+0,Organic Hass Avocado,45841
+0,Organic Avocado,41877
+0,Large Lemon,35826
+0,Limes,31878
+0,Strawberries,29046
+0,Organic Raspberries,27756
+1,Banana,90750
+1,Bag of Organic Bananas,72206
+1,Organic Strawberries,47897
+1,Organic Baby Spinach,43819
+1,Organic Hass Avocado,39660
+1,Organic Avocado,33450
+1,Large Lemon,27996
+1,Strawberries,26349
+1,Organic Raspberries,25063
+1,Organic Whole Milk,24025
+2,Banana,62002
+2,Bag of Organic Bananas,52122
+2,Organic Strawberries,33619
+2,Organic Baby Spinach,31094
+2,Organic Hass Avocado,28520
+2,Organic Avocado,22365
+2,Large Lemon,19513
+2,Strawberries,19147
+2,Organic Whole Milk,18229
+2,Organic Raspberries,18120
+3,Banana,55334
+3,Bag of Organic Bananas,47204
+3,Organic Strawberries,31670
+3,Organic Baby Spinach,26855
+3,Organic Hass Avocado,25287
+3,Organic Avocado,19629
+3,Strawberries,17553
+3,Organic Whole Milk,17088
+3,Large Lemon,16967
+3,Organic Raspberries,16885
+4,Banana,54447
+4,Bag of Organic Bananas,46358
+4,Organic Strawberries,31886
+4,Organic Baby Spinach,26290
+4,Organic Hass Avocado,24897
+4,Organic Avocado,19186
+4,Strawberries,17771
+4,Organic Whole Milk,17186
+4,Large Lemon,16924
+4,Organic Raspberries,16628
+5,Banana,61281
+5,Bag of Organic Bananas,50545
+5,Organic Strawberries,35534
+5,Organic Baby Spinach,29489
+5,Organic Hass Avocado,27082
+5,Organic Avocado,21543
+5,Large Lemon,19877
+5,Strawberries,19555
+5,Limes,18886
+5,Organic Raspberries,18815
+6,Banana,66003
+6,Bag of Organic Bananas,51443
+6,Organic Strawberries,38336
+6,Organic Baby Spinach,36602
+6,Organic Hass Avocado,29590
+6,Organic Avocado,26174
+6,Large Lemon,23689
+6,Limes,23368
+6,Organic Whole Milk,20198
+6,Strawberries,20024
