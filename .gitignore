@@ -2,3 +2,4 @@
 docs/*data/combined_instacart_data.csv 
 outputs/order_products.parquet 
 outputs/train_features.parquet 
+outputs/ 
