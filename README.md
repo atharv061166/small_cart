@@ -559,6 +559,8 @@ I used FP-Growth because it is fast, memory-efficient, and works well for market
 I chose K-Means because it is more efficient and faster compared to many other clustering algorithms because it works by finding the nearest cluster center using distance calculations. It performs well on large datasets like Instacart and creates clear user groups quickly. Other algorithms like Hierarchical Clustering are slower on large data, DBSCAN may create uneven clusters, and Gaussian Mixture Models are more complex and computationally expensive. K-Means gives a good balance of speed, simplicity, scalability, and easy interpretation.
 
 **Optimal K Evaluation (Elbow Graph)**:
+
+
 ![Elbow Method for Optimal k](frontend/src/elbow_method.png)
 
 
