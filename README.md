@@ -8,12 +8,9 @@
 - [Technology Stack](#technology-stack)
 - [Setup & Installation](#setup--installation)
 - [Running the Application](#running-the-application)
-- [API Documentation](#api-documentation)
 - [Machine Learning Models](#machine-learning-models)
 - [Data Preparation Notebooks](#data-preparation-notebooks)
 - [Security & Authentication](#security--authentication)
-- [Debugging & Monitoring](#debugging--monitoring)
-- [Performance Optimization](#performance-optimization)
 - [Data Refresh Schedule](#data-refresh-schedule)
 
 ---
@@ -325,111 +322,61 @@ graph TB
 
 ---
 
-### 4️⃣ Admin Dashboard: Demand & Product Order Intelligence
+# Recommendation System - Detailed Architecture Diagrams
 
-**Real-Time Analytics from Precomputed Cache**
-
-```mermaid
-graph TB
-    subgraph Charts["📈 Dashboard Visualizations"]
-        DOW["Day-of-Week Orders<br/>Bar Chart"]
-        Hourly["Hourly Orders<br/>Line Chart"]
-        Top10["Top 10 Products<br/>Horizontal Bar"]
-        Heatmap["Dept×DOW Heatmap<br/>Custom Grid"]
-    end
-
-    subgraph API["Backend API"]
-        DashAPI["GET /admin/dashboard<br/>(Single request)"]
-        ProdAPI["GET /admin/product/{name}"]
-    end
-
-    subgraph Data["Precomputed CSV Cache"]
-        OrdersDOW["orders_per_dow.csv"]
-        OrdersHour["orders_per_hour.csv"]
-        TopProd["top_products_overall.csv"]
-        DeptDOW["dept_demand_dow.csv"]
-        ProductDOW["product_dow_demand.json"]
-    end
-
-    subgraph KPIs["🎯 Product KPIs"]
-        TotalOrders["Total Orders"]
-        DOWDemand["Daily Demand Breakdown"]
-    end
-
-    OrdersDOW --> DashAPI
-    OrdersHour --> DashAPI
-    TopProd --> DashAPI
-    DeptDOW --> DashAPI
-
-    DashAPI -->|Single JSON| Charts
-
-    ProductDOW --> ProdAPI
-    ProdAPI -->|JSON| KPIs
-
-    style Charts fill:#e1f5fe
-    style API fill:#fff3e0
-    style Data fill:#c8e6c9
-    style KPIs fill:#f0f4c3
-```
-
-**API Endpoints**:
-- `GET /admin/dashboard` - All high-level demand metrics (CSV-backed)
-- `GET /admin/inventory` - Search and retrieve product names from demand history
-- `GET /admin/product/{product_name}` - Product total orders and daily demand breakdown (JSON-backed)
-
-For a detailed breakdown of the features, backend configurations, and visualization columns used for each dashboard section, see the [Admin Dashboard Technical Guide](docs/ADMIN_DASHBOARD_README.md).
-
----
-
-### 5️⃣ Coupon System & User Engagement
-
-**Automated Eligibility & Delivery**
+## Main Request → Response Pipeline
 
 ```mermaid
-graph LR
-    subgraph Config["coupon_config.json"]
-        MinOrders["min_order_count"]
-        MinDays["min_days_since_last_order"]
-        CouponAmt["coupon_amount"]
-        Validity["validity_hours"]
-    end
-
-    User["User Logs In"]
-    User -->|Check| Config
-    User -->|Fetch| Profile["GET /user/profile"]
+graph TD
+    A["📱 Frontend<br/>POST /api/recommendations"] -->|"cart_items<br/>order_count"| B["🔐 Auth Layer<br/>main.py"]
     
-    Profile -->|Evaluate| Logic["Is Eligible?"]
-    Logic -->|Yes| Create["Create coupon<br/>in Firebase"]
-    Logic -->|No| Skip["Skip"]
+    B -->|"Bearer Token"| C{"🔑 Token<br/>Valid?"}
+    C -->|"No"| D["❌ 401 Unauthorized"]
+    C -->|"Yes"| E["✅ Extract uid, email"]
     
-    Create -->|Detect| Frontend["Frontend receives<br/>coupon"]
-    Frontend -->|sessionStorage| Modal["Show Modal<br/>Countdown Timer"]
-    Modal -->|Dismiss| Storage["Store 'dismissed'<br/>in session"]
+    E -->|"uid"| F["🔥 Fetch Orders<br/>main.py"]
+    F -->|"Firestore available"| G["📊 Query Firestore"]
+    F -->|"Firestore down"| H["💾 Memory Store"]
+    G -->|"user_orders array"| I["📋 Parse Orders"]
+    H -->|"user_orders array"| I
     
-    Checkout["User Checkout"]
-    Checkout -->|Apply| Order["POST /orders"]
-    Order -->|Consume| Firebase["Set is_used=true<br/>in DB"]
-
-    style Config fill:#fff9c4
-    style User fill:#bbdefb
-    style Profile fill:#fff3e0
-    style Logic fill:#f0f4c3
-    style Create fill:#c8e6c9
-    style Modal fill:#ffccbc
-    style Order fill:#e1f5fe
-    style Firebase fill:#c8e6c9
+    I -->|"Count: len(orders)"| J["🎯 Strategy Selector<br/>recommendation_engine.py"]
+    J -->|"0-9 orders"| K["FP-Growth Only"]
+    J -->|"10-20 orders"| L["Hybrid 50/50"]
+    J -->|"21+ orders"| M["LightGBM Only"]
+    
+    K -->|"cart_items<br/>user_orders"| N["🛒 FP-Growth<br/>market_basket.py"]
+    L -->|"split parallel"| N
+    L -->|"split parallel"| O["🧠 LightGBM<br/>lightgbm_model.py"]
+    M -->|"user_orders"| O
+    
+    N -->|"association rules"| P["📦 FP Recommendations"]
+    
+    O -->|"orders dict"| Q["🔢 Extract Features<br/>extract_live_features"]
+    Q -->|"20 features<br/>per product"| R["🤖 LightGBM Predict<br/>lgbm_model.txt"]
+    R -->|"raw scores"| S["📉 Apply Popularity<br/>Penalty"]
+    S -->|"adjusted scores"| T["🏆 Top-N Selection"]
+    T -->|"product names"| U["📦 LightGBM Recs"]
+    
+    P -->|"combine"| V["🔀 Merge Results<br/>recommendation_engine.py"]
+    U -->|"combine"| V
+    
+    V -->|"sorted list"| W["✨ Reranking<br/>reranker.py"]
+    W -->|"diversity adjusted"| X["🎯 Filter & Sort<br/>- Remove cart items<br/>- Remove past orders<br/>- Top-N"]
+    
+    X -->|"final results"| Y["📦 Format Response<br/>JSON"]
+    Y -->|"{engine, recommendations}"| Z["🎉 Return to Frontend"]
+    
+    style B fill:#FFE5E5
+    style C fill:#FFE5E5
+    style D fill:#FFB3B3
+    style E fill:#E5F5E5
+    style J fill:#FFE5E5
+    style Q fill:#FFF5E5
+    style R fill:#FFE5FF
+    style W fill:#E5FFE5
 ```
 
-**Customization**: Edit `backend/coupon_config.json` without restarting the server:
-
-```json
-{
-  "min_order_count": 3,
-  "min_days_since_last_order": 30,
-  "coupon_amount": 50,
-  "validity_hours": 48
-}
-```
 
 ---
 
@@ -565,82 +512,6 @@ Frontend will be available at: `http://localhost:5173`
 
 ---
 
-## <a id="api-documentation"></a>📡 API Documentation
-
-### Authentication
-
-All endpoints (except `/products` and `/trending`) require Firebase authentication.
-
-**Header**: `Authorization: Bearer <firebase_id_token>`
-
-### Product & Catalog APIs
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/products` | GET | List all products or by department |
-| `/products/{product_id}` | GET | Get single product details |
-| `/departments` | GET | List all departments |
-
-**Example**:
-```bash
-curl http://localhost:8000/products?department=produce
-```
-
-### Recommendation APIs
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/recommendations` | GET | Get personalized recommendations for user |
-
-**Query Params**:
-- `user_id` - User ID (required)
-- `count` - Number of recommendations (default: 20)
-
-**Response**:
-```json
-{
-  "recommendations": [
-    {
-      "product_id": "123",
-      "name": "Organic Bananas",
-      "score": 0.95,
-      "reason": "Based on your purchase history"
-    }
-  ]
-}
-```
-
-### Trending APIs
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/trending` | GET | Get time-aware trending products |
-| `/trending/departments` | GET | Trending by department |
-
-**Query Params**:
-- `time_bucket` - Optional: 'morning', 'afternoon', 'evening', 'night'
-- `count` - Number of results (default: 10)
-
-### Admin APIs
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/admin/dashboard` | GET | Combined analytics data |
-| `/admin/inventory` | GET | Product inventory list (paginated) |
-| `/admin/product/{name}` | GET | Detailed product metrics & KPIs |
-| `/admin/segmentation` | GET | Customer segment clusters |
-
-### User & Order APIs
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/user/profile` | GET | Get user profile + active coupons |
-| `/orders` | POST | Create new order |
-| `/orders/{order_id}` | GET | Get order details |
-| `/user/history` | GET | Order history |
-
----
-
 ## <a id="machine-learning-models"></a>🧠 Machine Learning Models
 
 ### 1. LightGBM Recommendation Ranker
@@ -756,78 +627,6 @@ CORSMiddleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-```
-
----
-
-## <a id="debugging--monitoring"></a>🐛 Debugging & Monitoring
-
-### Backend Logging
-
-Enable debug mode:
-
-```bash
-# Verbose logging
-export LOG_LEVEL=DEBUG
-python -m uvicorn main:app --reload
-
-# Check logs
-tail -f backend.log
-```
-
-### Frontend Dev Tools
-
-```bash
-# Check console errors
-# Browser DevTools → Console
-
-# React DevTools extension
-# React components tree → State inspection
-
-# Network tab
-# View API requests & responses
-```
-
-### Common Issues
-
-| Issue | Solution |
-|-------|----------|
-| `403 Unauthorized` | Verify Firebase token, check CORS headers |
-| `Slow admin dashboard` | Regenerate precomputed cache (`precompute_admin_data.py`) |
-| `Recommendation not appearing` | Ensure LightGBM model is loaded in `recommendation_engine.py` |
-| `Coupon modal not showing` | Check `coupon_config.json` eligibility rules |
-
----
-
-## <a id="performance-optimization"></a>📈 Performance Optimization
-
-### Caching Strategy
-
-1. **Precomputed CSV Cache**: Admin dashboard data computed offline
-   - Regenerate daily or on-demand
-   - Sub-second JSON API response times
-   
-2. **Firebase Token Cache**: Google certificates cached 1 hour
-   - Auto-refreshes on invalid key ID
-   - Reduces external API calls
-
-3. **Frontend Caching**:
-   - sessionStorage for coupon modal state
-   - localStorage for user preferences
-
-### Database Indexing
-
-Recommended Firebase indexes:
-
-```
-/users
-  .indexOn: ["segment", "has_active_coupon", "last_order_date"]
-
-/orders
-  .indexOn: ["user_id", "created_at", "is_active"]
-
-/coupons
-  .indexOn: ["user_id", "is_used", "expires_at"]
 ```
 
 ---
