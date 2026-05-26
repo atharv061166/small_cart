@@ -334,11 +334,10 @@ graph TD
     C -->|"No"| D["❌ 401 Unauthorized"]
     C -->|"Yes"| E["✅ Extract uid, email"]
     
-    E -->|"uid"| F["🔥 Fetch Orders<br/>main.py"]
+   E -->|"uid"| F["🔥 Fetch Orders<br/>main.py"]
     F -->|"Firestore available"| G["📊 Query Firestore"]
-    F -->|"Firestore down"| H["💾 Memory Store"]
+    
     G -->|"user_orders array"| I["📋 Parse Orders"]
-    H -->|"user_orders array"| I
     
     I -->|"Count: len(orders)"| J["🎯 Strategy Selector<br/>recommendation_engine.py"]
     J -->|"0-9 orders"| K["FP-Growth Only"]
